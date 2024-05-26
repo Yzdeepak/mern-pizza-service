@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "jest --watch --runInBand",
-    "dev": "nodemon src/server.ts",
+    "dev": "nodemon -L src/server.ts",
     "format:check": "prettier . --check",
     "format:fix": "prettier . --write",
     "prepare": "husky"
