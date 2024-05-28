@@ -5,6 +5,7 @@ import { HttpError } from "http-errors";
 import authRouter from "./routes/auth";
 
 const app = express();
+app.use(express.json());
 
 app.get("/", async (req, res, next) => {
   res.send("Welcome dear deepa_yav ");
