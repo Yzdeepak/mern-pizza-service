@@ -3,6 +3,7 @@ import { AppDataSource } from "../config/data-source";
 import { User } from "../entity/User";
 import { UserData } from "../types/index";
 import createHttpError from "http-errors";
+import { Roles } from "../constants";
 
 export class UserService {
   constructor(private userRepository: Repository<User>) {}
@@ -14,6 +15,7 @@ export class UserService {
         lastName,
         email,
         password,
+        role: Roles.CUSTOMER,
       });
     } catch (err) {
       const error = createHttpError(500, "Failed  to store data in database");
