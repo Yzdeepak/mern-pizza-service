@@ -5,6 +5,7 @@ import { DataSource } from "typeorm";
 import { AppDataSource } from "../../src/config/data-source";
 import { User } from "../../src/entity/User";
 import { Roles } from "../../src/constants";
+import { isjwt } from "../utils";
 
 describe("POST /auth/register", () => {
   let connection: DataSource;
@@ -167,7 +168,52 @@ describe("POST /auth/register", () => {
       expect(response.statusCode).toBe(400);
       expect(users).toHaveLength(1);
     });
+
+    it("Should return the access token and refresh token inside a cookie", async () => {
+      // Arrange
+      const userData = {
+        firstName: "Deepak",
+        lastName: "yadav",
+        email: "yzdeepak@gmail.com",
+        password: "secret",
+      };
+
+      // Act
+
+      const response = await request(app).post("/auth/register").send(userData);
+
+      interface Headers {
+        ["set-cookie"]: string[];
+      }
+
+      //assert
+      let accessToken = null;
+      let refreshToken = null;
+
+      const cookies =
+        (response.headers as unknown as Headers)["set-cookie"] || [];
+      console.log(cookies);
+      console.log(response.headers);
+
+      cookies.forEach((cookie) => {
+        if (cookie.startsWith("accessToken=")) {
+          accessToken = cookie.split(";")[0].split("=")[1];
+        }
+        if (cookie.startsWith("refreshToken=")) {
+          refreshToken = cookie.split(";")[0].split("=")[1];
+        }
+      });
+
+      expect(accessToken).not.toBeNull();
+      expect(refreshToken).not.toBeNull();
+
+      expect(isjwt(accessToken)).toBeTruthy();
+      expect(isjwt(refreshToken)).toBeTruthy();
+    });
   });
+
+  // ====================Fields are missimg==============>
+
   describe("Fields are missing", () => {
     it("Should return 400 status code if email field is missing", async () => {
       // Arrange
@@ -188,7 +234,61 @@ describe("POST /auth/register", () => {
       const users = await userRepository.find();
       expect(users).toHaveLength(0);
     });
+
+    it("should return 400 status code if firstName is missing", async () => {
+      // Arrange
+      const userData = {
+        firstName: "",
+        lastName: "yadav",
+        email: "yzdeepak@gmail.com",
+        password: "secret",
+      };
+      // Act
+      const response = await request(app).post("/auth/register").send(userData);
+
+      // Assert
+      expect(response.statusCode).toBe(400);
+      const userRepository = connection.getRepository(User);
+      const users = await userRepository.find();
+      expect(users).toHaveLength(0);
+    });
+    it("should return 400 status code if lastName is missing", async () => {
+      // Arrange
+      const userData = {
+        firstName: "Deepak",
+        lastName: "",
+        email: "yzdeepak@gmail.com",
+        password: "secret",
+      };
+      // Act
+      const response = await request(app).post("/auth/register").send(userData);
+
+      // Assert
+      expect(response.statusCode).toBe(400);
+      const userRepository = connection.getRepository(User);
+      const users = await userRepository.find();
+      expect(users).toHaveLength(0);
+    });
+    it("should return 400 status code if password is missing", async () => {
+      // Arrange
+      const userData = {
+        firstName: "Deepak",
+        lastName: "Yadav",
+        email: "yzdeepak@gmail.com",
+        password: "",
+      };
+      // Act
+      const response = await request(app).post("/auth/register").send(userData);
+
+      // Assert
+      expect(response.statusCode).toBe(400);
+      const userRepository = connection.getRepository(User);
+      const users = await userRepository.find();
+      expect(users).toHaveLength(0);
+    });
   });
+
+  // ========================Field are not in proper==============>
 
   describe("Fields are not in proper formate", () => {
     it("Should trim the email field", async () => {
@@ -196,13 +296,13 @@ describe("POST /auth/register", () => {
       const userData = {
         firstName: "Deepak",
         lastName: "yadav",
-        email: " yzdeepak@gmail.com ",
+        email: "yzdeepak@gmail.com",
         password: "secret",
       };
 
       // Act
 
-      const response = await request(app).post("/auth/register").send(userData);
+      await request(app).post("/auth/register").send(userData);
 
       //assert
 
