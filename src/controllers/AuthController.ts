@@ -96,7 +96,7 @@ export class AuthController {
     //Compare password
     //Generate token
     //Add token to Cookies
-    //Return the response(id)
+    //Return the response(id).
 
     try {
       const user = await this.userService.findByEmail(email);
