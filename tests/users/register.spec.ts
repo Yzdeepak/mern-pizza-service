@@ -141,7 +141,7 @@ describe("POST /auth/register", () => {
       //assert
       const userRepository = connection.getRepository(User);
 
-      const users = await userRepository.find();
+      const users = await userRepository.find({ select: ["password"] });
       console.log(users[0].password);
 
       expect(users[0].password).not.toBe(userData.password);
