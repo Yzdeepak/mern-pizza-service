@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response } from "express";
+import { NextFunction, Response } from "express";
 import { JwtPayload } from "jsonwebtoken";
 
 import { AuthRequest, RegisterUserRequest } from "../types";
@@ -6,8 +6,6 @@ import { UserService } from "../services/UserService";
 import { Logger } from "winston";
 import { validationResult } from "express-validator";
 
-import { AppDataSource } from "../config/data-source";
-import { RefreshToken } from "../entity/RefreshToken";
 import { TokenService } from "../services/TokenService";
 import createHttpError from "http-errors";
 import { CredentialService } from "../services/CredentialService";
