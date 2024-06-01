@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response } from "express";
+import { NextFunction, Request, RequestHandler, Response } from "express";
 import { JwtPayload } from "jsonwebtoken";
 
 import { AuthRequest, RegisterUserRequest } from "../types";
@@ -209,6 +209,22 @@ export class AuthController {
       this.logger.info("User has been logged in", { id: user.id });
 
       res.json({ id: user.id });
+
+      res.json({});
+    } catch (err) {
+      next(err);
+      return;
+    }
+  }
+
+  async logout(req: AuthRequest, res: Response, next: NextFunction) {
+    try {
+      await this.tokenService.deleteRefreshToken(Number(req.auth.id));
+      this.logger.info("Refresh token has been deleted", { id: req.auth.id });
+      this.logger.info("User has been loggedOut", { id: req.auth.sub });
+
+      res.clearCookie("accessToken");
+      res.clearCookie("refreshToken");
 
       res.json({});
     } catch (err) {
