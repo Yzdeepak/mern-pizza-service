@@ -107,7 +107,6 @@ describe("GET/auth/self", () => {
   });
 
   it("Should return 401 status code if token does not exists", async () => {
-    //Register user
     const userData = {
       firstName: "Deepak",
       lastName: "yadav",
@@ -121,12 +120,11 @@ describe("GET/auth/self", () => {
       role: Roles.CUSTOMER,
     });
 
-    //add token to cookie
     const response = await request(app).get("/auth/self").send();
+    console.log(response);
 
     //assert
 
-    //check if user id matches with register user
     expect(response.statusCode).toBe(401);
   });
 });
