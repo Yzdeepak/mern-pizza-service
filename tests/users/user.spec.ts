@@ -121,7 +121,6 @@ describe("GET/auth/self", () => {
     });
 
     const response = await request(app).get("/auth/self").send();
-    console.log(response);
 
     //assert
 
