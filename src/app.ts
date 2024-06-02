@@ -5,6 +5,7 @@ import { HttpError } from "http-errors";
 import authRouter from "./routes/auth";
 import cookieParser from "cookie-parser";
 import tenantRouter from "./routes/tenants";
+import userRouter from "./routes/user";
 
 const app = express();
 app.use(express.static("public"));
@@ -17,6 +18,7 @@ app.get("/", async (req, res, next) => {
 
 app.use("/auth", authRouter);
 app.use("/tenants", tenantRouter);
+app.use("/users", userRouter);
 
 app.use((err: HttpError, req: Request, res: Response, next: NextFunction) => {
   logger.error(err.message);
