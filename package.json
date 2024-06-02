@@ -4,11 +4,12 @@
    "description": "user mainagement service",
    "main": "index.js",
    "scripts": {
-      "test": "jest --watch --runInBand",
       "dev": "cross-env NODE_ENV=dev nodemon -L src/server.ts",
+      "build":"tsc",
       "format:check": "prettier . --check",
       "format:fix": "prettier . --write",
       "prepare": "husky",
+      "test": "jest --watch --runInBand",
       "start": "ts-node src/index.ts",
       "migration:generate": "typeorm-ts-node-commonjs migration:generate",
       "migration:run": "typeorm-ts-node-commonjs migration:run",
