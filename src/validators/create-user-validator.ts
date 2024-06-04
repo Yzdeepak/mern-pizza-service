@@ -30,5 +30,9 @@ export default checkSchema({
       errorMessage: "Password length should be at least 8 chars!",
     },
   },
+  role: {
+    errorMessage: "Role is required!",
+    notEmpty: true,
+    trim: true,
+  },
 });
-// export default [body("email").notEmpty().withMessage("Email is required!")];

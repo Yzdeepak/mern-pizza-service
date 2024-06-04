@@ -1,13 +1,13 @@
 import { DataSource } from "typeorm";
-import { AppDataSource } from "../../src/config/data-source";
 import bcrypt from "bcrypt";
+import request from "supertest";
+import { AppDataSource } from "../../src/config/data-source";
+import app from "../../src/app";
+import { isJwt } from "../utils";
 import { User } from "../../src/entity/User";
 import { Roles } from "../../src/constants";
-import request from "supertest";
-import app from "../../src/app";
-import { isjwt } from "../utils";
 
-describe("POST/auth/login", () => {
+describe("POST /auth/login", () => {
   let connection: DataSource;
 
   beforeAll(async () => {
@@ -15,8 +15,6 @@ describe("POST/auth/login", () => {
   });
 
   beforeEach(async () => {
-    //database truncate
-
     await connection.dropDatabase();
     await connection.synchronize();
   });
@@ -25,9 +23,7 @@ describe("POST/auth/login", () => {
     await connection.destroy();
   });
 
-  describe("Give all fields", () => {
-    //   it("Shoul login the user");
-
+  describe("Given all fields", () => {
     it("should return the access token and refresh token inside a cookie", async () => {
       // Arrange
       const userData = {
@@ -71,8 +67,8 @@ describe("POST/auth/login", () => {
       expect(accessToken).not.toBeNull();
       expect(refreshToken).not.toBeNull();
 
-      expect(isjwt(accessToken)).toBeTruthy();
-      expect(isjwt(refreshToken)).toBeTruthy();
+      expect(isJwt(accessToken)).toBeTruthy();
+      expect(isJwt(refreshToken)).toBeTruthy();
     });
     it("should return the 400 if email or password is wrong", async () => {
       // Arrange
