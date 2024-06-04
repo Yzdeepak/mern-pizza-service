@@ -19,7 +19,8 @@ WORKDIR /app
 
 COPY package*.json ./
 
-RUN npm ci --ignore-scripts --omit=dev
+RUN npm ci --ignore-scripts 
+# --omit=dev
 
 COPY --from=builder /app/dist ./
 
