@@ -13,8 +13,7 @@ export default expressjwt({
     const { refreshToken } = req.cookies as AuthCookie;
     return refreshToken;
   },
-
-  async isRevoked(req: Request, token) {
+  async isRevoked(request: Request, token) {
     try {
       const refreshTokenRepo = AppDataSource.getRepository(RefreshToken);
       const refreshToken = await refreshTokenRepo.findOne({
@@ -23,10 +22,9 @@ export default expressjwt({
           user: { id: Number(token?.payload.sub) },
         },
       });
-
       return refreshToken === null;
-    } catch (error) {
-      logger.error("error ehile getting the refresh token", {
+    } catch (err) {
+      logger.error("Error while getting the refresh token", {
         id: (token?.payload as IRefreshTokenPayload).id,
       });
     }
